@@ -10,4 +10,10 @@ router.post("/login", controller.login);
 
 router.get("/detail", requireAuth, controller.detail);
 
+router.post("/password/forgot", controller.forgotPassword);
+
+router.post("/password/otp", controller.passwordOtp);
+
+router.post("/password/reset", controller.resetPassword);
+
 export const userRoutes: Router = router;
