@@ -135,3 +135,38 @@ export const changeMulti = async (req: Request, res: Response): Promise<void> =>
     });
   }
 }
+
+// [POST] /api/v1/tasks/create
+export const create = async (req: Request, res: Response): Promise<void> => {
+  // req.body.createdBy = res.locals.user.id;
+  const task = new Task(req.body);
+  await task.save();
+
+  res.json({
+    code: 200,
+    message: "Tạo công việc thành công!"
+  });
+};
+
+
+// [PATCH] /api/v1/tasks/edit/:id
+export const edit = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id: string = req.params.id;
+    const data = req.body;
+  
+    await Task.updateOne({
+      _id: id
+    }, data);
+  
+    res.json({
+      code: 200,
+      message: "Cập nhật công việc thành công!"
+    });
+  } catch (error) {
+    res.json({
+      code: 400,
+      message: "Cập nhật không thành công"
+    })
+  }
+};
