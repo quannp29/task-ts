@@ -69,3 +69,11 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     token: token
   });
 }
+
+// [GET] /api/v1/users/detail/:id
+export const detail = async (req: Request, res: Response): Promise<void> => {
+  res.json({
+    code: 200,
+    user: res.locals.user
+  });
+}
