@@ -170,3 +170,53 @@ export const edit = async (req: Request, res: Response): Promise<void> => {
     })
   }
 };
+
+
+// [PATCH] /api/v1/tasks/delete/:id
+export const deleteTask = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id: string = req.params.id;
+  
+    await Task.updateOne({
+      _id: id
+    }, {
+      deleted: true,
+      deletedAt: new Date()
+    });
+  
+    res.json({
+      code: 200,
+      message: "Xóa công việc thành công!"
+    });
+  } catch (error) {
+    res.json({
+      code: 400,
+      message: "Xóa công việc không thành công"
+    })
+  }
+};
+
+
+// [PATCH] /api/v1/tasks/delete-multi
+export const deleteMulti = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { ids } = req.body;
+
+    await Task.updateMany({
+      _id: { $in: ids }
+    }, {
+      deleted: true,
+      deletedAt: new Date()
+    });
+  
+    res.json({
+      code: 200,
+      message: "Xóa các công việc thành công!"
+    });    
+  } catch (error) {
+    res.json({
+      code: 400,
+      message: "Xóa công việc không thành công"
+    })
+  }
+};
