@@ -16,4 +16,6 @@ router.post("/password/otp", controller.passwordOtp);
 
 router.post("/password/reset", controller.resetPassword);
 
+router.get("/list", requireAuth, controller.list);
+
 export const userRoutes: Router = router;

@@ -179,3 +179,16 @@ export const resetPassword = async (req: Request, res: Response): Promise<void> 
     })
   }
 }
+
+// [GET] /api/v1/users/list
+export const list = async (req: Request, res: Response): Promise<void> => {
+  const users = await User.find({
+    deleted: false
+  }).select("fullName email avatar");
+
+  res.json({
+    code: 200,
+    message: "Thành công!",
+    users: users
+  });
+}
