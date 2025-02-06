@@ -1,6 +1,7 @@
 import express, { Express } from "express";
 import env from "dotenv";
 import bodyParser from "body-parser";
+import cors from "cors";
 env.config();
 
 import { connect } from "./config/database";
@@ -9,6 +10,8 @@ connect();
 
 const app: Express = express();
 const port: (number | string) = `${process.env.PORT}`;
+
+app.use(cors());
 
 // parse application/json
 app.use(bodyParser.json());
