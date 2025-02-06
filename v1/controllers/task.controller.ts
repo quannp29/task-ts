@@ -162,6 +162,30 @@ export const changeMulti = async (
 // [POST] /api/v1/tasks/create
 export const create = async (req: Request, res: Response): Promise<void> => {
   req.body.createdBy = res.locals.user.id;
+
+  if(req.body.taskParentId) {
+    try {
+      const task = await Task.findOne({
+        _id: req.body.taskParentId,
+        deleted: false
+      });
+
+      if(!task) {
+        res.json({
+          code: 400,
+          message: "Không tồn tại công việc phụ thuộc"
+        });
+        return;
+      }
+    } catch (error) {
+      res.json({
+        code: 400,
+        message: "Không tồn tại công việc phụ thuộc"
+      });
+      return;
+    }
+  }
+
   const task = new Task(req.body);
   await task.save();
 

@@ -3,8 +3,9 @@ const router: Router = express.Router();
 
 import * as controller from "../controllers/user.controller";
 import { requireAuth } from "../middlewares/auth.middleware";
+import { registerValidate } from "../validates/user.validate";
 
-router.post("/register", controller.register);
+router.post("/register", registerValidate, controller.register);
 
 router.post("/login", controller.login);
 

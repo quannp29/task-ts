@@ -2,6 +2,7 @@ import express, { Router } from "express";
 const router: Router = express.Router();
 
 import * as controller from "../controllers/task.controller";
+import { createTaskValidate } from "../validates/task.validate";
 
 router.get("/", controller.index);
 
@@ -11,7 +12,7 @@ router.patch("/change-status/:id", controller.changeStatus);
 
 router.patch("/change-multi", controller.changeMulti);
 
-router.post("/create", controller.create);
+router.post("/create", createTaskValidate, controller.create);
 
 router.patch("/edit/:id", controller.edit);
 
