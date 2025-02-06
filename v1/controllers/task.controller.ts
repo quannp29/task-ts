@@ -5,21 +5,52 @@ import Task from "../models/task.model";
 export const index = async (req: Request, res: Response): Promise<void> => {
   interface Find {
     deleted: false,
-    status?: string
+    status?: string,
+    title?: RegExp,
   }
-  
+
   const find: Find = {
-    deleted: false
+    deleted: false,
   };
 
-  if(req.query.status) {
+  if (req.query.status) {
     find.status = `${req.query.status}`;
   }
 
-  const tasks = await Task.find(find);
+  // Search
+  if(req.query.keyword) {
+    const regex = new RegExp(`${req.query.keyword}`, "i");
+    find.title = regex;
+  }
+  // End Search
+
+  // Sort
+  const sort: any = {};
+
+  if (req.query.sortKey && req.query.sortValue) {
+    sort[`${req.query.sortKey}`] = `${req.query.sortValue}`;
+  }
+  // End Sort
+
+  // Pagination
+  const pagination = {
+    limit: 4,
+    page: 1,
+  };
+
+  if (req.query.page) pagination.page = parseInt(`${req.query.page}`);
+  if (req.query.limit) pagination.limit = parseInt(`${req.query.limit}`);
+
+  const skip = (pagination.page - 1) * pagination.limit;
+  // Pagination
+
+  const tasks = await Task.find(find)
+    .sort(sort)
+    .limit(pagination.limit)
+    .skip(skip);
 
   res.json(tasks);
-}
+};
 
 // [GET] /api/v1/tasks/detail/:id
 export const detail = async (req: Request, res: Response): Promise<void> => {
@@ -27,8 +58,8 @@ export const detail = async (req: Request, res: Response): Promise<void> => {
 
   const task = await Task.findOne({
     _id: id,
-    deleted: false
+    deleted: false,
   });
 
   res.json(task);
-}
+};
