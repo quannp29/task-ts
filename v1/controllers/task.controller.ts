@@ -49,17 +49,56 @@ export const index = async (req: Request, res: Response): Promise<void> => {
     .limit(pagination.limit)
     .skip(skip);
 
-  res.json(tasks);
+  res.json({
+    code: 200,
+    message: "Thành công",
+    tasks: tasks
+  });
 };
 
 // [GET] /api/v1/tasks/detail/:id
 export const detail = async (req: Request, res: Response): Promise<void> => {
-  const id: string = req.params.id;
-
-  const task = await Task.findOne({
-    _id: id,
-    deleted: false,
-  });
-
-  res.json(task);
+  try {
+    const id: string = req.params.id;
+  
+    const task = await Task.findOne({
+      _id: id,
+      deleted: false,
+    });
+  
+    res.json({
+      code: 200,
+      message: "Thành công",
+      task: task
+    });
+  } catch (error) {
+    res.json({
+      code: 400,
+      message: "Không tồn tại bản ghi!"
+    });
+  }
 };
+
+// [PATCH] /api/v1/tasks/change-status/:id
+export const changeStatus = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id: string = req.params.id;
+    const status: string = req.body.status;
+
+    await Task.updateOne({
+      _id: id
+    }, {
+      status: status
+    });
+
+    res.json({
+      code: 200,
+      message: "Cập nhật trạng thái thành công!"
+    });
+  } catch (error) {
+    res.json({
+      code: 400,
+      message: "Không tồn tại bản ghi!"
+    });
+  }
+}
